@@ -1,8 +1,10 @@
 import { Link } from "react-router-dom";
 
 import styles from "./Sidebar.module.css";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faX } from "@fortawesome/free-solid-svg-icons";
 
-const Sidebar = ({ sidebarOpen }) => {
+const Sidebar = ({ sidebarOpen, onSidebarChange }) => {
   return (
     <aside
       className={
@@ -11,6 +13,9 @@ const Sidebar = ({ sidebarOpen }) => {
           : `${styles.sidebar} ${styles.show} ${styles.close}`
       }
     >
+      <div className={styles.closeSideBar} onClick={onSidebarChange}>
+        <FontAwesomeIcon icon={faX} size="xl" />
+      </div>
       <ul>
         <li>
           <Link to="home">Home</Link>
