@@ -35,14 +35,15 @@
   color: #1e3050;
 }
 .submit {
-  margin: 2rem auto 0;
+  margin: 2rem auto;
   border: none;
   font-size: 1rem;
   font-weight: bold;
   padding: 10px 20px;
   cursor: pointer;
   border-radius: 11px;
-  color: #1e3050;
+  background-color: #1e3050;
+  color: white;
 }
 .error {
   color: red;
@@ -52,6 +53,22 @@
 }
 .result {
   display: flex;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+}
+.loader {
+  height: 80vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.errorParagraph {
+  display: flex;
+  align-items: center;
+  width: 80vw;
+  text-align: center;
+  justify-content: center;
 }
 @media (max-width: 768px) {
   .formInputs {

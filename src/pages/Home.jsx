@@ -43,12 +43,15 @@ const Home = () => {
 
   const onFromChange = ({ target }) => {
     setFrom(target.value);
+    setFinalResult(false);
   };
   const onToChange = ({ target }) => {
     setTo(target.value);
+    setFinalResult(false);
   };
   const onAmountChange = ({ target }) => {
     setAmount(target.value);
+    setFinalResult(false);
   };
   const onConvertHandler = (e) => {
     e.preventDefault();
@@ -64,67 +67,112 @@ const Home = () => {
 
   let firstCountryOptions;
   let secondCountryOptions;
-  if (firstCountryCurrency && secondCountryCurrency) {
+  if (
+    firstCountryCurrency &&
+    secondCountryCurrency &&
+    currencyCountryData &&
+    countryName
+  ) {
     firstCountryOptions = Object.keys(firstCountryCurrency).map(
       (value, index) => (
         <option key={index} value={firstCountryCurrency[value]}>
-          {value} | {countryName[value]}
+          {value} - {countryName[value]}
         </option>
       )
     );
     secondCountryOptions = Object.keys(secondCountryCurrency).map(
       (value, index) => (
         <option key={index} value={secondCountryCurrency[value]}>
-          {value} | {countryName[value]}
+          {value} - {countryName[value]}
         </option>
       )
     );
   }
 
-  if (isFetching) {
-    return <ClipLoader color="#1e3050" />;
+  let firstCountryCurrencyName;
+  if (firstCountryCurrency && currencyCountryData) {
+    firstCountryCurrencyName =
+      currencyCountryData?.symbols[
+        Object.keys(firstCountryCurrency).find(
+          (item) =>
+            firstCountryCurrency[item] ===
+            Object.values(firstCountryCurrency).find((item) => {
+              return item === Number(from);
+            })
+        )
+      ];
   }
+  let secondCountryCurrencyName;
+  if (secondCountryCurrency && currencyCountryData) {
+    secondCountryCurrencyName =
+      currencyCountryData?.symbols[
+        Object.keys(secondCountryCurrency).find(
+          (item) =>
+            secondCountryCurrency[item] ===
+            Object.values(secondCountryCurrency).find((item) => {
+              return item === Number(to);
+            })
+        )
+      ];
+  }
+  if (isFetching) {
+    return (
+      <div className={styles.loader}>
+        <ClipLoader color="#1e3050" />
+      </div>
+    );
+  }
+  console.log({ data });
 
   if (data) {
     return (
       <div className={styles.fullPage}>
-        <div className={styles.form}>
-          <h1 className={styles.header}>Currency Converter</h1>
-          <form onSubmit={onConvertHandler}>
-            <div className={styles.formInputs}>
-              <TextInput
-                label="Amount"
-                value={amount || ""}
-                onChangeText={onAmountChange}
-                required={true}
-                pattern="^[1-9]\d*(\.\d+)?$"
-                guide="amount accept numbers only"
-              />
-              <SelectInput
-                label="From"
-                optionValue={from}
-                onOptionChange={onFromChange}
-                required={true}
-                options={firstCountryOptions}
-              />
-              {console.log({ from })}
-              <SelectInput
-                label="To"
-                optionValue={to}
-                onOptionChange={onToChange}
-                required={true}
-                options={secondCountryOptions}
-              />
-            </div>
-            {error !== "" && <p className={styles.error}>{error}</p>}
-            <input type="submit" className={styles.submit} value="Convert" />
-          </form>
-          {finalResult === true && (
-            <div className={styles.result}>
-              <p>{result}</p>
-            </div>
-          )}
-        </div>
+        {data.success === true ? (
+          <div className={styles.form}>
+            <h1 className={styles.header}>Currency Converter</h1>
+            <form onSubmit={onConvertHandler}>
+              <div className={styles.formInputs}>
+                <TextInput
+                  label="Amount"
+                  value={amount || ""}
+                  onChangeText={onAmountChange}
+                  required={true}
+                  pattern="^[1-9]\d*(\.\d+)?$"
+                  guide="amount accept numbers only"
+                />
+                <SelectInput
+                  label="From"
+                  optionValue={from}
+                  onOptionChange={onFromChange}
+                  required={true}
+                  options={firstCountryOptions}
+                />
+                <SelectInput
+                  label="To"
+                  optionValue={to}
+                  onOptionChange={onToChange}
+                  required={true}
+                  options={secondCountryOptions}
+                />
+              </div>
+              {error !== "" && <p className={styles.error}>{error}</p>}
+              <input type="submit" className={styles.submit} value="Convert" />
+            </form>
+            {finalResult === true && (
+              <div className={styles.result}>
+                <p>
+                  <strong>{amount}</strong> {firstCountryCurrencyName} <br />
+                  =
+                  <br />
+                  <strong>{Number(result).toFixed(2)}</strong>{" "}
+                  {secondCountryCurrencyName}
+                </p>
+              </div>
+            )}
+          </div>
+        ) : (
+          <p className={styles.errorParagraph}>{data.error.info}</p>
+        )}
       </div>
     );
   }
