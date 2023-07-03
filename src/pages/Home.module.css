@@ -1,0 +1,29 @@
+.fullPage {
+  margin-top: 4rem;
+  display: flex;
+  justify-content: center;
+}
+.formInputs {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+}
+.form {
+  box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+  padding: 15px 10px;
+  border-radius: 11px;
+  width: 90vw;
+}
+.form form {
+  display: flex;
+  flex-direction: column;
+}
+.submit {
+  width: 25%;
+  margin: 0 auto;
+}
+@media (max-width: 768px) {
+  .formInputs {
+    flex-direction: column;
+  }
+}

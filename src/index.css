@@ -18,3 +18,9 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New",
     monospace;
 }
+
+.form-control {
+  display: flex;
+  flex-direction: column;
+  margin: 10px;
+}
