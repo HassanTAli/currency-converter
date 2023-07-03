@@ -7,7 +7,10 @@ export const currencyApi = createApi({
     getData: builder.query({
       query: () => "latest?access_key=a97ea8b7774051d08c5b2129fb73b614",
     }),
+    getCurrencyCountry: builder.query({
+      query: () => "symbols?access_key=a97ea8b7774051d08c5b2129fb73b614",
+    }),
   }),
 });
 
-export const { useGetDataQuery } = currencyApi;
+export const { useGetDataQuery, useGetCurrencyCountryQuery } = currencyApi;

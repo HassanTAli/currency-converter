@@ -6,6 +6,7 @@ const TextInput = ({
   id,
   required,
   pattern,
+  guide,
 }) => {
   return (
     <div className="form-control">
@@ -22,6 +23,7 @@ const TextInput = ({
         required={required || false}
         pattern={pattern}
       />
+      <p>{guide}</p>
     </div>
   );
 };

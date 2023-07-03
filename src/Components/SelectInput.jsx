@@ -18,6 +18,7 @@ const SelectInput = ({
         value={optionValue}
         onChange={onOptionChange}
         required={required}
+        className="minimal"
       >
         <option value="select" disabled>
           --- Select An Option ---

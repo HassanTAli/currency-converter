@@ -5,7 +5,10 @@ import { useDispatch, useSelector } from "react-redux";
 import SelectInput from "../Components/SelectInput";
 import TextInput from "../Components/TextInput";
 
-import { useGetDataQuery } from "../services/currencyApi";
+import {
+  useGetCurrencyCountryQuery,
+  useGetDataQuery,
+} from "../services/currencyApi";
 import styles from "./Home.module.css";
 import {
   convertCurrency,
@@ -17,24 +20,29 @@ import {
 const Home = () => {
   const dispatch = useDispatch();
   const { result } = useSelector((state) => state.currency);
-  const [form, setForm] = useState("");
-  const [firstCountryCurrency, setFirstCountryCurrency] = useState("select");
-  const [to, setTo] = useState("");
-  const [secondCountryCurrency, setSecondCountryCurrency] = useState("select");
+  const [from, setFrom] = useState("select");
+  const [firstCountryCurrency, setFirstCountryCurrency] = useState("");
+  const [countryName, setCountryName] = useState("");
+  const [to, setTo] = useState("select");
+  const [secondCountryCurrency, setSecondCountryCurrency] = useState("");
   const [amount, setAmount] = useState("");
+  const [finalResult, setFinalResult] = useState(0);
+  const [error, setError] = useState("");
 
   const { data, isFetching } = useGetDataQuery();
+  const { data: currencyCountryData } = useGetCurrencyCountryQuery();
 
   useEffect(() => {
     setFirstCountryCurrency(data?.rates);
     setSecondCountryCurrency(data?.rates);
+    setCountryName(currencyCountryData?.symbols);
     dispatch(setCurrencyAmount(amount));
-    dispatch(setCurrencyOne(form));
+    dispatch(setCurrencyOne(from));
     dispatch(setCurrencyTwo(to));
-  }, [data, amount, dispatch, form, to]);
+  }, [data, amount, dispatch, from, to, currencyCountryData]);
 
-  const onFormChange = ({ target }) => {
-    setForm(target.value);
+  const onFromChange = ({ target }) => {
+    setFrom(target.value);
   };
   const onToChange = ({ target }) => {
     setTo(target.value);
@@ -44,10 +52,15 @@ const Home = () => {
   };
   const onConvertHandler = (e) => {
     e.preventDefault();
-    dispatch(convertCurrency());
-  };
 
-  console.log({ form, to, amount });
+    if (from === "select" || to === "select") {
+      setError("Please select a currency");
+    } else {
+      dispatch(convertCurrency());
+      setFinalResult(true);
+      setError("");
+    }
+  };
 
   let firstCountryOptions;
   let secondCountryOptions;
@@ -55,17 +68,14 @@ const Home = () => {
     firstCountryOptions = Object.keys(firstCountryCurrency).map(
       (value, index) => (
         <option key={index} value={firstCountryCurrency[value]}>
-          {value}
-          {console.log({ value, index })}
+          {value} | {countryName[value]}
         </option>
       )
     );
-
     secondCountryOptions = Object.keys(secondCountryCurrency).map(
       (value, index) => (
         <option key={index} value={secondCountryCurrency[value]}>
-          {value}
-          {console.log({ value, index })}
+          {value} | {countryName[value]}
         </option>
       )
     );
@@ -79,6 +89,7 @@ const Home = () => {
     return (
       <div className={styles.fullPage}>
         <div className={styles.form}>
+          <h1 className={styles.header}>Currency Converter</h1>
           <form onSubmit={onConvertHandler}>
             <div className={styles.formInputs}>
               <TextInput
@@ -86,14 +97,17 @@ const Home = () => {
                 value={amount || ""}
                 onChangeText={onAmountChange}
                 required={true}
+                pattern="^[1-9]\d*(\.\d+)?$"
+                guide="amount accept numbers only"
               />
               <SelectInput
-                label="Form"
-                optionValue={form}
-                onOptionChange={onFormChange}
+                label="From"
+                optionValue={from}
+                onOptionChange={onFromChange}
                 required={true}
                 options={firstCountryOptions}
               />
+              {console.log({ from })}
               <SelectInput
                 label="To"
                 optionValue={to}
@@ -102,9 +116,14 @@ const Home = () => {
                 options={secondCountryOptions}
               />
             </div>
+            {error !== "" && <p className={styles.error}>{error}</p>}
             <input type="submit" className={styles.submit} value="Convert" />
           </form>
-          <div>{result}</div>
+          {finalResult === true && (
+            <div className={styles.result}>
+              <p>{result}</p>
+            </div>
+          )}
         </div>
       </div>
     );

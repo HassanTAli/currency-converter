@@ -1,29 +1,64 @@
 .fullPage {
-  margin-top: 4rem;
   display: flex;
   justify-content: center;
+  align-items: center;
+  height: 80vh;
 }
-.formInputs {
-  display: flex;
-  flex-direction: row;
-  justify-content: center;
+.header {
+  text-align: center;
+  margin-bottom: 40px;
 }
 .form {
   box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
   padding: 15px 10px;
   border-radius: 11px;
   width: 90vw;
+  max-height: 80vh;
 }
 .form form {
   display: flex;
   flex-direction: column;
 }
+.formInputs {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+}
+.formInputs select,
+.formInputs input {
+  padding: 12px;
+  font-size: 20px;
+  border-radius: 6px;
+  box-shadow: rgba(0, 17, 51, 0.05) 0px 3px 15px;
+  border: 1px solid rgb(221, 221, 221);
+  margin-top: 10px;
+  color: #1e3050;
+}
 .submit {
-  width: 25%;
-  margin: 0 auto;
+  margin: 2rem auto 0;
+  border: none;
+  font-size: 1rem;
+  font-weight: bold;
+  padding: 10px 20px;
+  cursor: pointer;
+  border-radius: 11px;
+  color: #1e3050;
+}
+.error {
+  color: red;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.result {
+  display: flex;
 }
 @media (max-width: 768px) {
   .formInputs {
     flex-direction: column;
+  }
+  .form {
+    overflow: scroll;
+    margin-top: 2rem;
   }
 }
